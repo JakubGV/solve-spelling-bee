@@ -1,0 +1,34 @@
+.background {
+  background-color: #f7da21;
+  height: 100%;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f7da21;
+}
+
+.letter-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.letter {
+  font-weight: bold;
+  padding: 0.5em;
+  border-style: solid;
+  margin: 0.5em;
+  background-color: rgb(238, 238, 238);
+  width: 1em;
+  height: 1.5em;
+  text-align: center;
+  font-size: 25px;
+}
+
+.letter[first-letter="true"] {
+  color: #f7da21;
+  border-color: black;
+}
