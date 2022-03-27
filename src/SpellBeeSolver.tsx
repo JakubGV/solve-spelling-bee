@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react';
+import { Circles } from 'react-loader-spinner';
 import { WordVisual } from './WordVisual';
 import './SpellBeeSolver.css';
 
@@ -27,6 +28,8 @@ type Props = {
 type State = {
   index: number,
   letters: string, // The index to insert next at
+  frozenLetters: string,
+  loading: boolean,
   results: boolean,
   words: string[]
 }
@@ -35,6 +38,8 @@ export class SpellBeeSolver extends React.Component<Props, State> {
   state: State = {
     index: 0,
     letters: '       ',
+    frozenLetters: '',
+    loading: false,
     results: false,
     words: []
   };
@@ -74,34 +79,34 @@ export class SpellBeeSolver extends React.Component<Props, State> {
     this.setState({
       index: tempIndex,
       letters: tempLetters
-    })
+    });
   }
 
   handleEnterPress = () => {
-    if (this.state.index !== 7) {
-      alert('Please enter 7 letters');
+    const currIndex = this.state.index;
+    const letters = this.state.letters;
+    if (currIndex !== 7) {
       return;
     }
     else {
-      this.getWords(this.state.letters);
-      return;
+      // Move the requied letter to the beginning for the API
+      let arrLetters = letters.split('');
+      const temp = arrLetters[0];
+      arrLetters[0] = arrLetters[3];
+      arrLetters[3] = temp;
+      const adjLetters = arrLetters.join('');
+      
+      const URL = `https://nyt-spellbee-solver-ax6jl2dzpa-ue.a.run.app/solve?letters=${adjLetters.toLowerCase()}`
+
+      this.setState({
+        loading: true
+      })
+      
+      fetch(URL, { method: 'GET' } )
+        .then(response => response.json())
+        .then(data => this.setState({ loading: false, results: true, frozenLetters: letters, words: data }))
+        .catch(error => { alert(`Error fetching: ${error}`); this.setState({ loading: false }); });
     }
-  }
-
-  getWords = (letters: string) => {
-    // Move the requied letter to the beginning for the API
-    let arrLetters = letters.split('');
-    const temp = arrLetters[0];
-    arrLetters[0] = arrLetters[3];
-    arrLetters[3] = temp;
-    const adjLetters = arrLetters.join('');
-    
-    const URL = `https://nyt-spellbee-solver-ax6jl2dzpa-ue.a.run.app/solve?letters=${adjLetters.toLowerCase()}`
-
-    fetch(URL, { method: 'GET' } )
-      .then(response => response.json())
-      .then(data => this.setState({ results: true, words: data }))
-      .catch(error => alert(`Error fetching: ${error}`));
   }
 
   render() {
@@ -112,8 +117,12 @@ export class SpellBeeSolver extends React.Component<Props, State> {
           <p>Type the letters in and hit enter!</p>
           <LettersRow letters={this.state.letters} />
           {
+            this.state.loading &&
+            <div className="circle"><Circles height="50" width="50" color="#000000" /></div>
+          }
+          {
             this.state.results &&
-            <WordVisual letters={this.state.letters} words={this.state.words} />
+            <WordVisual letters={this.state.frozenLetters} words={this.state.words} />
           }
         </div>
       </div>
