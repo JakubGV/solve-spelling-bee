@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/solve-spelling-bee/static/css/main.acbfb650.css",
-    "main.js": "/solve-spelling-bee/static/js/main.223df2ce.js",
+    "main.css": "/solve-spelling-bee/static/css/main.3eb02eec.css",
+    "main.js": "/solve-spelling-bee/static/js/main.59ddab3b.js",
     "index.html": "/solve-spelling-bee/index.html",
-    "main.acbfb650.css.map": "/solve-spelling-bee/static/css/main.acbfb650.css.map",
-    "main.223df2ce.js.map": "/solve-spelling-bee/static/js/main.223df2ce.js.map"
+    "main.3eb02eec.css.map": "/solve-spelling-bee/static/css/main.3eb02eec.css.map",
+    "main.59ddab3b.js.map": "/solve-spelling-bee/static/js/main.59ddab3b.js.map"
   },
   "entrypoints": [
-    "static/css/main.acbfb650.css",
-    "static/js/main.223df2ce.js"
+    "static/css/main.3eb02eec.css",
+    "static/js/main.59ddab3b.js"
   ]
 }
