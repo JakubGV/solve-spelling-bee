@@ -1,29 +1,12 @@
-import React, { FunctionComponent } from 'react';
+import { Component } from 'react';
 import { Circles } from 'react-loader-spinner';
-import { WordVisual } from './WordVisual';
+import Keyboard from 'react-simple-keyboard';
+import 'react-simple-keyboard/build/css/index.css';
+
+import { DisplayWords } from './DisplayWords';
+import { LettersRow } from './LettersRow';
+
 import './SpellBeeSolver.css';
-
-type LettersRowProps = {
-  letters: string
-}
-
-const LettersRow: FunctionComponent <LettersRowProps> = (props) => {
-  return (
-    <div className="letter-row">
-      {
-        props.letters.split('').map( (letter: string, index) => {
-          return (
-            <div className="letter" first-letter={index === 3 ? "true" : "false"} key={index}>{letter}</div>
-          )
-        })
-      }
-    </div>
-  )
-}
-
-type Props = {
-
-}
 
 type State = {
   index: number,
@@ -34,7 +17,7 @@ type State = {
   words: string[]
 }
 
-export class SpellBeeSolver extends React.Component<Props, State> {
+export class SpellBeeSolver extends Component<{}, State> {
   state: State = {
     index: 0,
     letters: '       ',
@@ -44,31 +27,45 @@ export class SpellBeeSolver extends React.Component<Props, State> {
     words: []
   };
 
+  // Listen for key presses
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyPress)
   };
 
   handleKeyPress = (event: KeyboardEvent) => {
     const pressedKey = event.key.toUpperCase();
+    this.keyPressLogic(pressedKey);
+  }
+
+  // Handles a press on the virtual keyboard
+  handleVirtualKeyPress = (button: any) => {
+    this.keyPressLogic(button);
+  }
+
+  /**
+   * Sanitizes keyboard input and only allows letters, a backspace, or enter to be acted upon
+   * @param pressedKey The key that was pressed
+   */
+  keyPressLogic = (pressedKey: string) => {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     
     let tempLetters = this.state.letters;
     let tempIndex = this.state.index;
 
-    if (pressedKey === 'BACKSPACE') {
-      if (tempIndex !== 0) {
+    if (pressedKey === 'BACKSPACE' || pressedKey === '{bksp}') {
+      if (tempIndex !== 0) { // Replace the letter with an empty character if there is a letter to be deleted
         tempIndex -= 1;
         tempLetters = tempLetters.substring(0, tempIndex) + ' ' + tempLetters.substring(tempIndex + 1);
       }
     }
-    else if (pressedKey === 'ENTER') {
+    else if (pressedKey === 'ENTER' || pressedKey === '{enter}') {
       this.handleEnterPress();
       return;
     }
     else if (tempLetters[6] !== ' ') { // Don't add more than 7 letters
       return;
     }
-    else if (letters.search(pressedKey) !== -1) {
+    else if (letters.search(pressedKey) !== -1) { // If what was inputted is a valid letter, add the letter
       tempLetters = tempLetters.substring(0, tempIndex) + pressedKey + tempLetters.substring(tempIndex + 1);
       tempIndex += 1;
     }
@@ -82,6 +79,10 @@ export class SpellBeeSolver extends React.Component<Props, State> {
     });
   }
 
+  /**
+   * Sends a request to my [backend API](https://github.com/JakubGV/nyt-spellbee-solver) with the letters
+   * which responds with the words found
+   */
   handleEnterPress = () => {
     const currIndex = this.state.index;
     const letters = this.state.letters;
@@ -104,7 +105,9 @@ export class SpellBeeSolver extends React.Component<Props, State> {
       
       fetch(URL, { method: 'GET' } )
         .then(response => response.json())
-        .then(data => this.setState({ loading: false, results: true, frozenLetters: letters, words: data }))
+        .then(data => this.setState({ 
+          loading: false, results: true, frozenLetters: letters, words: data
+        }))
         .catch(error => { alert(`Error fetching: ${error}`); this.setState({ loading: false }); });
     }
   }
@@ -122,9 +125,22 @@ export class SpellBeeSolver extends React.Component<Props, State> {
           }
           {
             this.state.results &&
-            <WordVisual letters={this.state.frozenLetters} words={this.state.words} />
+            <DisplayWords letters={this.state.frozenLetters} words={this.state.words} />
           }
         </div>
+        <Keyboard 
+          onKeyPress={this.handleVirtualKeyPress}
+          layout={{'default': [
+            'Q W E R T Y U I O P',
+            'A S D F G H J K L',
+            '{enter} Z X C V B N M {bksp}'
+          ]}}
+          display={{
+            '{enter}': 'ENTER',
+            '{bksp}': 'BACK'
+          }}
+          theme={"hg-theme-default keyboard"}
+        />
       </div>
     )
   }
