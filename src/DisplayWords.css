@@ -1,8 +1,9 @@
 .container {
-  max-width: 500px;
+  max-width: 550px;
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 
 .row {
@@ -17,5 +18,7 @@
 }
 
 .right {
-  width: 60%;
+  /* Set the right side to add up to less than 100% (40%+55% < 100%) */
+  /* To account for the margin in the row container */
+  width: 55%;
 }

@@ -14,28 +14,6 @@ h1 {
   margin-block-end: 0em;
 }
 
-.letter-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-}
-
-.letter {
-  font-weight: bold;
-  padding: 0.5em;
-  border-style: solid;
-  margin: 0.5em;
-  background-color: rgb(238, 238, 238);
-  width: 1em;
-  height: 1.5em;
-  text-align: center;
-}
-
-.letter[first-letter="true"] {
-  border-color: black;
-  background-color: #f7da21;
-}
-
 .circle {
   margin-top: 1em;
 }
@@ -47,9 +25,5 @@ h1 {
 @media screen and (min-width: 1024px) {
   .keyboard {
     display: none;
-  }
-
-  .letter {
-    font-size: 25px;
   }
 }
