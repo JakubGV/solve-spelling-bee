@@ -15,7 +15,7 @@ Additionally, some components I built, such as [LettersRow.tsx](./src/LettersRow
 ## Interaction with Self-Built API
 The core logic behind solving the spelling bee is located in my [nyt-spellbee-solver](https://github.com/JakubGV/nyt-spellbee-solver) repository, a solving script built in Python. Instead, this web application makes a GET request to the `/solve` endpoint I created, which is parameterized to accept different letters. So, when you hit enter after typing in your letters, the application is contacting a server hosted on [Google Cloud Run](https://cloud.google.com/run) for all the words it can find using those letters.
 
-## Learnings
+## What I learned
 * Designing web applications for both mobile and desktop
 * Dynamically fetching from an API and rendering that data
 * Creating event listeners for keyboard input
